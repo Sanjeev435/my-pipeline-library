@@ -18,34 +18,31 @@ def call(Map<String, String> body ) {
                 }
 
                 stage('build') {
-                    steps {
-                        if(isUnix()){
+                    if(isUnix()){
                             sh 'mvn clean package -Dmaven.test.skip=true'
                         }
                         else{
                             bat('mvn clean install -Dmaven.test.skip=true')
                         }
-                    }
-                }
-
+                  }
+                
                 stage ('test') {
-                    steps {
-							if(pipelineParams.RUN_TEST == 'yes'){
-								if(isUnix()){
-									 parallel (
-										"unit tests": { sh 'mvn test' },
-										"integration tests": { sh 'mvn integration-test' }
-										)
-								}else{
-									 parallel (
-										"unit tests": { bat('mvn test')},
-										"integration tests": { bat('mvn integration-test')}
-									 )
-								}
-							}
-						}
+                    if(pipelineParams.RUN_TEST == 'yes'){
+				if(isUnix()){
+					parallel (
+						"unit tests": { sh 'mvn test' },
+						"integration tests": { sh 'mvn integration-test' }
+						)
+				}else{
+					 parallel (
+						"unit tests": { bat('mvn test')},
+						"integration tests": { bat('mvn integration-test')}
+						 )
 					}
 				}
+			}
+		}
+	}
             post {
                 failure {
                     mail to: pipelineParams.EMAIL, subject: 'Pipeline failed', body: "${env.BUILD_URL}"
