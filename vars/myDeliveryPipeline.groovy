@@ -12,32 +12,41 @@ def call(Map<String, String> body ) {
             agent any
             stages {
                 stage('checkout git') {
-                        git branch: pipelineParams.BRANCH, url:'https://github.com/Sanjeev435/spring-petclinic.git'
+					steps{
+					git branch: pipelineParams.BRANCH, url:'https://github.com/Sanjeev435/spring-petclinic.git'
+					}
+                        
                 }
 
                 stage('build') {
-                    if(isUnix()){
+					steps{
+					if(isUnix()){
                             sh 'mvn clean package -Dmaven.test.skip=true'
                         }
                         else{
                             bat('mvn clean install -Dmaven.test.skip=true')
                         }
+					}
+                    
                   }
                 
                 stage ('test') {
-                    if(pipelineParams.RUN_TEST == 'yes'){
-				if(isUnix()){
-					parallel (
-						"unit tests": { sh 'mvn test' },
-						"integration tests": { sh 'mvn integration-test' }
-						)
-				}else{
-					 parallel (
-						"unit tests": { bat('mvn test')},
-						"integration tests": { bat('mvn integration-test')}
-						 )
+				steps{
+				    if(pipelineParams.RUN_TEST == 'yes'){
+						if(isUnix()){
+							parallel (
+								"unit tests": { sh 'mvn test' },
+								"integration tests": { sh 'mvn integration-test' }
+							)
+						else{
+							parallel (
+								"unit tests": { bat('mvn test')},
+								"integration tests": { bat('mvn integration-test')}
+							)
+						}
 					}
 				}
+
 			}
 		}
 	
