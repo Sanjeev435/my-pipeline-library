@@ -12,9 +12,7 @@ def call(Map<String, String> body ) {
             agent any
             stages {
                 stage('checkout git') {
-                    steps {
                         git branch: pipelineParams.BRANCH, url:'https://github.com/Sanjeev435/spring-petclinic.git'
-                    }
                 }
 
                 stage('build') {
