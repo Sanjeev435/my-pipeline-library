@@ -7,11 +7,8 @@ def call( body) {
    // pipelineParams = body
 	
 //	println pipelineParams.BRANCH
-	try{
-		println(${body.BRANCH})
-	}catch(Exception ex){
-		println("Catching the exception");
-	}
+	println body
+	
 	
         // our complete declarative pipeline can go in here
         pipeline {
