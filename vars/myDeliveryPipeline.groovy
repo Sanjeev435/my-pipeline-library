@@ -42,7 +42,7 @@ def call(Map<String, String> body ) {
 				}
 			}
 		}
-	}
+	
             post {
                 failure {
                     mail to: pipelineParams.EMAIL, subject: 'Pipeline failed', body: "${env.BUILD_URL}"
