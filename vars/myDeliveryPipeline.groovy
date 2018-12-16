@@ -5,7 +5,8 @@ def call(Map<String, String> body ) {
   //  body.delegate = pipelineParams
   //  body()
     pipelineParams = body
-
+	
+	println body.BRANCH
     pipeline {
         // our complete declarative pipeline can go in here
         pipeline {
