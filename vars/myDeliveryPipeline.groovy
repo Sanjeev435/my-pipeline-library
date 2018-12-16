@@ -1,13 +1,12 @@
 def call( body) {
     // evaluate the body block, and collect configuration into the object
     def pipelineParams= [:]
-    body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = pipelineParams
-    body()
+//    body.resolveStrategy = Closure.DELEGATE_FIRST
+ //   body.delegate = pipelineParams
+ //   body()
    // pipelineParams = body
 	
-	println pipelineParams.BRANCH
-    pipeline {
+//	println pipelineParams.BRANCH
         // our complete declarative pipeline can go in here
         pipeline {
             agent any
@@ -15,7 +14,7 @@ def call( body) {
 			// stage checkout git
                 stage('checkout git') {
 					steps{
-					git branch: body.BRANCH, url:'https://github.com/Sanjeev435/spring-petclinic.git'
+					git branch: master, url:'https://github.com/Sanjeev435/spring-petclinic.git'
 					}
                         
                 }
@@ -42,7 +41,7 @@ def call( body) {
                 stage ('test') {
 				steps{
 				script{
-								    if(pipelineParams.RUN_TEST == 'yes'){
+								    if('yes' == 'yes'){
 						if(isUnix()){
 							parallel (
 								"unit tests": { sh 'mvn test' },
@@ -67,12 +66,12 @@ def call( body) {
 	
             post {
                 failure {
-                    mail to: pipelineParams.EMAIL, subject: 'Pipeline failed', body: "${env.BUILD_URL}"
+                    mail to: 'mrcool435@gmail.com', subject: 'Pipeline failed', body: "${env.BUILD_URL}"
                 }
 				success{
 					println "SUCCESS"
 				}
             }
         }
-    }
+    
 }
