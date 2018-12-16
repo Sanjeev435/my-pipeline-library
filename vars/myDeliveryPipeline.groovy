@@ -23,12 +23,15 @@ def call(Map<String, String> body ) {
 // stage build
                 stage('build') {
 					steps{
+					script{
 					if(isUnix()){
                             sh 'mvn clean package -Dmaven.test.skip=true'
                         }
                         else{
                             bat('mvn clean install -Dmaven.test.skip=true')
                         }
+					}
+					
 					}
                     
                   }
@@ -37,7 +40,8 @@ def call(Map<String, String> body ) {
                // stage Test
                 stage ('test') {
 				steps{
-				    if(pipelineParams.RUN_TEST == 'yes'){
+				script{
+								    if(pipelineParams.RUN_TEST == 'yes'){
 						if(isUnix()){
 							parallel (
 								"unit tests": { sh 'mvn test' },
@@ -51,6 +55,8 @@ def call(Map<String, String> body ) {
 							)
 						}
 					}
+				}
+
 				}
 
 			}
