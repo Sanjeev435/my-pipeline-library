@@ -1,4 +1,6 @@
-def call(Closure body) {
+
+
+def call(Map body) {
     // evaluate the body block, and collect configuration into the object
     def pipelineParams= [:]
 //    body.resolveStrategy = Closure.DELEGATE_FIRST
@@ -7,6 +9,7 @@ def call(Closure body) {
    // pipelineParams = body
 	
 //	println pipelineParams.BRANCH
+	println 'Map'
 	println body
 	
 	
