@@ -14,7 +14,7 @@ def call(Map<String, String> body ) {
 			// stage checkout git
                 stage('checkout git') {
 					steps{
-					git branch: pipelineParams.BRANCH, url:'https://github.com/Sanjeev435/spring-petclinic.git'
+					git branch: body.BRANCH, url:'https://github.com/Sanjeev435/spring-petclinic.git'
 					}
                         
                 }
