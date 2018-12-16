@@ -11,13 +11,16 @@ def call(Map<String, String> body ) {
         pipeline {
             agent any
             stages {
+			// stage checkout git
                 stage('checkout git') {
 					steps{
 					git branch: pipelineParams.BRANCH, url:'https://github.com/Sanjeev435/spring-petclinic.git'
 					}
                         
                 }
-
+				
+				//checkout git ends
+// stage build
                 stage('build') {
 					steps{
 					if(isUnix()){
@@ -29,7 +32,9 @@ def call(Map<String, String> body ) {
 					}
                     
                   }
-                
+				  // stage build ends
+				  
+               // stage Test
                 stage ('test') {
 				steps{
 				    if(pipelineParams.RUN_TEST == 'yes'){
@@ -38,6 +43,7 @@ def call(Map<String, String> body ) {
 								"unit tests": { sh 'mvn test' },
 								"integration tests": { sh 'mvn integration-test' }
 							)
+							}
 						else{
 							parallel (
 								"unit tests": { bat('mvn test')},
@@ -48,6 +54,8 @@ def call(Map<String, String> body ) {
 				}
 
 			}
+			
+			 // stage Test Ends
 		}
 	
             post {
