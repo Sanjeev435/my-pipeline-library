@@ -7,6 +7,12 @@ def call( body) {
    // pipelineParams = body
 	
 //	println pipelineParams.BRANCH
+	try{
+		println(${body.BRANCH})
+	}catch(Exception ex){
+		println("Catching the exception");
+	}
+	
         // our complete declarative pipeline can go in here
         pipeline {
             agent any
