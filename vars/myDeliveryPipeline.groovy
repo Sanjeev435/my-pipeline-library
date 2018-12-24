@@ -4,14 +4,15 @@ def call(Object body) {
 	println(body)
     // evaluate the body block, and collect configuration into the object
     def pipelineParams= [:]
-//    body.resolveStrategy = Closure.DELEGATE_FIRST
- //   body.delegate = pipelineParams
- //   body()
+    body.resolveStrategy = Closure.DELEGATE_FIRST
+    body.delegate = pipelineParams
+    body()
    // pipelineParams = body
 	
 //	println pipelineParams.BRANCH
 	println 'Map'
 	println body
+	println pipelineParams
 	
 	
         // our complete declarative pipeline can go in here
