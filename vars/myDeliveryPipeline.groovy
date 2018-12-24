@@ -6,7 +6,7 @@ def call(Object body) {
     def pipelineParams= [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = pipelineParams
-    body()
+//    body()
    // pipelineParams = body
 	
 //	println pipelineParams.BRANCH
