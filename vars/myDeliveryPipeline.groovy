@@ -3,19 +3,18 @@
 def call(body) {
 	println(body)
     // evaluate the body block, and collect configuration into the object
-    def pipelineParams= [:]
-//	body.delegate = pipelineParams
+    def config = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = pipelineParams
+    body.delegate = config
     body()
    // pipelineParams = body
-	println 'pipelineParams.BRANCH value :'
-	println (pipelineParams.BRANCH)
+	println 'config.BRANCH value :'
+	println (config.BRANCH)
 //	println pipelineParams.BRANCH
-	println 'Map'
+	println 'Map : '
 	println body
-	println 'pipelineParams'
-	println pipelineParams
+	println 'config : '
+	println config
 	
 	println 'Start pipeline steps'
 	
