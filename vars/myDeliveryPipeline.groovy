@@ -88,6 +88,3 @@ def call(body) {
     
 }
 
-def call(Closure body){
-println('In Closure')	
-}
