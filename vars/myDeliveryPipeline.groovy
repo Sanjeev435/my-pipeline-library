@@ -21,7 +21,7 @@ def call(body) {
 	
         // our complete declarative pipeline can go in here
         pipeline {
-		agent { label 'Test_Node11' 
+		agent { label 'Test_Node11' }
             stages {
 			// stage checkout git
                 stage('checkout git') {
@@ -76,7 +76,7 @@ def call(body) {
 			
 			 // stage Test Ends
 		}
-		      }
+		      
 	
             post {
                 failure {
