@@ -25,8 +25,8 @@ def call(body) {
             stages {
 			// stage checkout git
                 stage('checkout git') {
-					steps{
-					sh "git branch: 'master', url:'https://github.com/Sanjeev435/spring-petclinic.git'"
+					steps{ 
+					sh ' git branch: 'master', url:'https://github.com/Sanjeev435/spring-petclinic.git' '
 					}
                         
                 }
