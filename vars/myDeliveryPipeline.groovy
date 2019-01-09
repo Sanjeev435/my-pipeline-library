@@ -21,7 +21,7 @@ def call(body) {
 	
         // our complete declarative pipeline can go in here
         pipeline {
-		agent { label 'Test_Node11' }
+		agent { label 'Test_Node11' 
             stages {
 			// stage checkout git
                 stage('checkout git') {
@@ -29,7 +29,8 @@ def call(body) {
 					sh 'git branch: "master", url:"https://github.com/Sanjeev435/spring-petclinic.git"'
 					}
                         
-                }
+		
+		}
 				
 				//checkout git ends
 // stage build
@@ -75,6 +76,7 @@ def call(body) {
 			
 			 // stage Test Ends
 		}
+		      }
 	
             post {
                 failure {
