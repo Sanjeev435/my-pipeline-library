@@ -6,7 +6,7 @@ def call(body) {
     def config = [:]
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = config
-    body()
+   // body()
    // pipelineParams = body
 	println 'config.BRANCH value :'
 	println (config.BRANCH)
