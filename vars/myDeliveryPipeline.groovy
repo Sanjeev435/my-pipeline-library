@@ -1,92 +1,62 @@
 #!/usr/bin/groovy
 
-def call(body) {
-	println(body)
-    // evaluate the body block, and collect configuration into the object
-    def config = [:]
-    body.resolveStrategy = Closure.DELEGATE_FIRST
-    body.delegate = config
-   // body()
-   // pipelineParams = body
-	println 'config.BRANCH value :'
-	println (config.BRANCH)
-//	println pipelineParams.BRANCH
-	println 'Map : '
-	println body
-	println 'config : '
-	println config
-	
-	println 'Start pipeline steps'
-	
-	
-        // our complete declarative pipeline can go in here
-        pipeline {
-		agent { label 'Test_Node11' }
-            stages {
-			// stage checkout git
-                stage('checkout git') {
-					steps{ 
-					sh "git branch:'master', url:'https://github.com/Sanjeev435/spring-petclinic.git'"
-					}
-                        
-		
-		}
-				
-				//checkout git ends
-// stage build
-                stage('build') {
-					steps{
-					script{
-					if(isUnix()){
-                            sh 'mvn clean package -Dmaven.test.skip=true'
-                        }
-                        else{
-                            bat('mvn clean install -Dmaven.test.skip=true')
-                        }
-					}
-					
-					}
-                    
-                  }
-				  // stage build ends
-				  
-               // stage Test
-                stage ('test') {
-				steps{
-				script{
-								    if('yes' == 'yes'){
-						if(isUnix()){
-							parallel (
-								"unit tests": { sh 'mvn test' },
-								"integration tests": { sh 'mvn integration-test' }
-							)
-							}
-						else{
-							parallel (
-								"unit tests": { bat('mvn test')},
-								"integration tests": { bat('mvn integration-test')}
-							)
-						}
-					}
-				}
 
-				}
+pipeline{
 
-			}
-			
-			 // stage Test Ends
-		}
-		      
-	
-            post {
-                failure {
-                    mail to: 'mrcool435@gmail.com', subject: 'Pipeline failed', body: "${env.BUILD_URL}"
-                }
-				success{
-					println "SUCCESS"
-				}
-            }
-        }
+       // agent { label 'Test_Node11' }
+	   agent any
     
-}
-
+      stages{
+              
+         stage ('Deploy app release'){
+                    //writeFile file: 'extras.json', text: "{'image_tag': '${IMAGE_TAG}', 'ecs_tasks': [${TASKS}]}"
+                    //sh 'ansible-playbook site.yml -e "@extras.json"'
+                    //new and working
+                    steps{ 
+                         sh 'ansible-playbook  ~/Documents/sampleAnsible/site.yml ' 
+                       }
+               }
+              
+         stage('Maven Install and clone Gitrepo'){
+                   steps{
+                      parallel (
+                           "unit tests 1 ": { sh 'mvn clean install -Dmaven.test.failure.ignore -Dmaven.test.skip=true'},
+						   "unit tests 2 ": { sh 'mvn clean install -Dmaven.test.failure.ignore -Dmaven.test.skip=true'},
+						   "unit tests 3 ": { sh 'mvn clean install -Dmaven.test.failure.ignore -Dmaven.test.skip=true'},
+						   "unit tests 4 ": { sh 'mvn clean install -Dmaven.test.failure.ignore -Dmaven.test.skip=true'}
+                       )
+                    }   
+              }
+        
+         stage('Docker Build') {     
+             steps {
+			  parallel (
+                     "Docker Build 1 ": { sh 'docker build -t sanjeev435/spring-petclinic:latest .'}, 
+					 "Docker Build 2 ": { sh 'docker build -t sanjeev435/spring-petclinic:latest .'}
+                   )
+                }
+           }
+			
+         stage('Docker Push') {
+             steps {
+                     withCredentials([usernamePassword(credentialsId: 'DOCKER_HUB_GLOBAL', passwordVariable: 'dockerHubPassword',
+					 usernameVariable: 'dockerHubUser')]) {
+                     sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+                     sh 'docker push sanjeev435/spring-petclinic'}
+			    }
+			}
+        }
+		
+	post {
+          failure{
+                  println "still facing"
+              }
+     
+     success{
+          println 'SUCCESS'
+          mail to: 'shweta.idk@gmail.com',
+             subject: "Successful Pipeline: ${currentBuild.fullDisplayName}",
+             body: "Everything is correct with ${env.BUILD_URL}"
+          }
+     }
+  }
