@@ -3,40 +3,26 @@
 
 
 def call(body) {
-
-	println(body)
-
+    println(body)
+	
     // evaluate the body block, and collect configuration into the object
-
     def config = [:]
-
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = config
-    //config = body;
-	println('config body  : '+config)
     body()
 	
-        println(config)
-	println 'config.BRANCH value :'
-	println (config.BRANCH)
-	
-	println 'Map : ' 
-	print body
-	
-	println 'config : '
-	print config
+    println('config body : '+config)
 
-	
 println 'Start pipeline steps'
 // our complete declarative pipeline can go in here
 pipeline {
-    agent { label 'Test_Node11' }
-   // agent any
+   // agent { label 'Test_Node11' }
+    agent any
         stages {
            // stage checkout git
             stage('checkout git') {
 		steps{ 
-			sh "git branch:'master', url:'https://github.com/Sanjeev435/spring-petclinic.git'"
+			sh "git branch:config.branch, url:'https://github.com/Sanjeev435/spring-petclinic.git'"
 		    }
 		}
           //checkout git ends
@@ -60,7 +46,7 @@ pipeline {
            stage ('test') {
 	      steps{
 		   script{
-			if('yes' == 'yes'){
+			if(branch.runTest == 'yes'){
 				if(isUnix()){
 				     parallel (
 					"unit tests": { sh 'mvn test' },
@@ -81,7 +67,7 @@ pipeline {
 	     }
             post {
                 failure {
-                    mail to: 'mrcool435@gmail.com', subject: 'Pipeline failed', body: "${env.BUILD_URL}"
+                    mail to: branch.email, subject: 'Pipeline failed', body: "${env.BUILD_URL}"
                 }
 		success{
 		   println "SUCCESS"
