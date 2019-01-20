@@ -13,6 +13,7 @@ def call(body) {
     body.resolveStrategy = Closure.DELEGATE_FIRST
     body.delegate = config
     //config = body;
+	println('config body  : '+config)
     body()
 	
         println(config)
