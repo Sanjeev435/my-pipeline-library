@@ -2,7 +2,7 @@
 
 
 
-def call(body) {
+def call(Map<String, String> body) {
 
 	println(body)
 
@@ -10,12 +10,11 @@ def call(body) {
 
     def config = [:]
 
-    body.resolveStrategy = Closure.DELEGATE_FIRST
-
-    body.delegate = config
-
+  //  body.resolveStrategy = Closure.DELEGATE_FIRST
+  //  body.delegate = config
+config = body;
    // body()
-
+println(config)
    // pipelineParams = body
 
 	println 'config.BRANCH value :'
