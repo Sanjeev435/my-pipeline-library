@@ -3,7 +3,7 @@
 
 
 def call(body) {
-    println(body)
+    println('Body from JenkinsFile : 'body)
 	
     // evaluate the body block, and collect configuration into the object
     def config = [:]
