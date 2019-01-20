@@ -12,6 +12,8 @@ def call(body) {
     body()
 	
     println('config body : '+config)
+println(config.branch)
+	println($config.branch)
 
 println 'Start pipeline steps'
 // our complete declarative pipeline can go in here
