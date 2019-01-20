@@ -13,7 +13,6 @@ def call(body) {
 	
     println('config body : '+config)
 println(config.branch)
-	println($config.branch)
 
 println 'Start pipeline steps'
 // our complete declarative pipeline can go in here
@@ -24,7 +23,10 @@ pipeline {
            // stage checkout git
             stage('checkout git') {
 		steps{ 
-			sh "git branch:config.branch, url:'https://github.com/Sanjeev435/spring-petclinic.git'"
+			script{
+				sh "git branch:($config.branch), url:'https://github.com/Sanjeev435/spring-petclinic.git'"
+			}
+			
 		    }
 		}
           //checkout git ends
@@ -48,7 +50,7 @@ pipeline {
            stage ('test') {
 	      steps{
 		   script{
-			if(branch.runTest == 'yes'){
+			if(config.runTest == 'yes'){
 				if(isUnix()){
 				     parallel (
 					"unit tests": { sh 'mvn test' },
